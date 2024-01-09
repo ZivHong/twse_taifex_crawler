@@ -26,11 +26,14 @@ def check_file_exist(task_list):
         if not os.path.isfile(filename):
             not_exist_list.append(future)
         else:
-            with open(filename,"r") as f:
-                first_line = f.readline()
-                if "HTML" in first_line:
-                    not_exist_list.append(future)
-                    del_flag = True
+            try:
+                with open(filename,"r") as f:
+                    first_line = f.readline()
+                    if "HTML" in first_line:
+                        not_exist_list.append(future)
+                        del_flag = True
+            except UnicodeDecodeError:
+                continue
 
         if del_flag: os.remove(filename)
 
