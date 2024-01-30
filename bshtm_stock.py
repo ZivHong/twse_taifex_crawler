@@ -10,6 +10,7 @@ import twse
 import time
 import pandas as pd
 import shutil
+import csv
 from urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
 
@@ -153,6 +154,11 @@ if __name__ == '__main__':
                                 download_page = s.get(download_url)
                                 with open(f'{today}/bshtm/{stock}.csv', 'wb') as f:
                                     f.write(download_page.content)
+                                with open(f'{today}/bshtm/{stock}.csv', encoding="big5") as csvfile:
+                                    csv_reader = csv.reader(csvfile)
+                                    for row in csv_reader:
+                                        if len(row[0]) > 14:
+                                            raise Exception("content is broken")
                                 logging.info(f'Get {stock} OK')
                                 break
                             else: 

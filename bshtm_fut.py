@@ -4,7 +4,6 @@ import aiohttp
 import utils
 import sys
 import os
-import random
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
 from urllib3.exceptions import InsecureRequestWarning
@@ -16,21 +15,21 @@ headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Ge
     
 def check_file_exist(task_list):
     not_exist_list = []
-    for future in task_list:
+    for task in task_list:
         del_flag = False
-        if future[0] == "STF":
-            filename = f"{output_dir}/{future[1]}_{future[2]}.csv"
+        if task[0] == "STF":
+            filename = f"{output_dir}/{task[1]}_{task[2]}.csv"
         else:
-            filename = f"{output_dir}/{future[0]}_{future[2]}.csv"
+            filename = f"{output_dir}/{task[0]}_{task[2]}.csv"
 
         if not os.path.isfile(filename):
-            not_exist_list.append(future)
+            not_exist_list.append(task)
         else:
             try:
                 with open(filename,"r") as f:
                     first_line = f.readline()
                     if "HTML" in first_line:
-                        not_exist_list.append(future)
+                        not_exist_list.append(task)
                         del_flag = True
             except UnicodeDecodeError:
                 continue
