@@ -4,6 +4,7 @@ __pycache__/
 # Ignore specific folder names
 archived/
 holiday/
-
+data/
+s
 # Ignore filenames matching YYYYMMDD pattern  
 [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/
