@@ -159,6 +159,7 @@ if __name__ == '__main__':
                                     for row in csv_reader:
                                         if len(row[0]) > 14:
                                             raise Exception("content is broken")
+                                        break
                                 logging.info(f'Get {stock} OK')
                                 break
                             else: 
