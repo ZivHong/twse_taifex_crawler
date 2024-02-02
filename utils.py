@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import os
 
-def get_today(now=datetime.now(),post=False) -> str: 
+def get_today(now=datetime.now(),post=False,roc_era=False) -> str: 
     shift = 0
     # if today is weekend set to friday
     if now.weekday() >= 5:
@@ -18,9 +18,9 @@ def get_today(now=datetime.now(),post=False) -> str:
                 shift = -3
             if post:
                 shift = 0
-    
     today = (now + timedelta(days=shift)).strftime("%Y%m%d")
-    
+    if roc_era:
+        today = str(int(today)-19110000)
     return today
 
 def create_dir(dirname:str):
@@ -28,5 +28,6 @@ def create_dir(dirname:str):
     os.makedirs(dirname+"/bshtm",exist_ok=True)
     os.makedirs(dirname+"/bshtm_fut",exist_ok=True)
     os.makedirs(dirname+"/bshtm_opt",exist_ok=True)
+    os.makedirs(dirname+"/bshtm_otc",exist_ok=True)
     os.makedirs(dirname+"/taifex",exist_ok=True)
     os.makedirs(dirname+"/twse",exist_ok=True)

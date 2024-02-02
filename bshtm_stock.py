@@ -21,16 +21,22 @@ def get_stock():
     for file in os.listdir(f'{today}/bshtm'):
         filename_without_extension = os.path.splitext(file)[0]
         ok_list.append(filename_without_extension)
-
+    
     stock_csv = f'{today}/twse/STOCK_DAY_ALL.csv'
-
     if not os.path.isfile(stock_csv):
         twse.get_stock_day_all(today)
-
     df = pd.read_csv(stock_csv)
-    filtered_df = df[df.iloc[:, 2] != 0]
+    filtered_df = df[df.iloc[:, 9] != 0] # filter out no trade stock
     stock_list = filtered_df.iloc[:, 0].tolist()
     stock_list.append("excd")
+
+    otc_csv = f'{today}/twse/OTC_DAY_ALL.csv'
+    if not os.path.isfile(otc_csv):
+        twse.get_otc_day_all(today)
+    df = pd.read_csv(otc_csv)
+    filtered_df = df[df.iloc[:, 9] != 0] # filter out no trade stock
+    stock_list = filtered_df.iloc[:, 0].tolist()
+
     stock_list = [item for item in stock_list if item not in ok_list]
     
     return stock_list
@@ -90,7 +96,6 @@ if __name__ == '__main__':
     utils.create_dir(today)
     
     logging.basicConfig(filename=f'{today}/bshtm.log', level=logging.INFO,format='%(asctime)s | %(levelname)8s | %(message)s')
-    
     logging.info("Crawler start")
 
     ip_list = ['117.56.218.176', '122.147.34.176', '163.29.17.176', '210.65.84.176', '220.229.103.176', '61.57.47.176']
@@ -105,7 +110,7 @@ if __name__ == '__main__':
     try:
         stock_list = get_stock()
     except Exception as e:
-        logging.error(f'Get stock_day_all Fail\t{e}')
+        logging.error(f'Get today stock Fail\t{e}')
         logging.error(f'Crawler Fail')
         os._exit(0)
 
@@ -144,7 +149,7 @@ if __name__ == '__main__':
                             if len(error_text) == 5: #驗證碼錯誤
                                 raise Exception("Captcha recognize error") 
                             elif len(error_text) == 4: #查無資料
-                                logging.info(f'{stock} maybe is big deal')
+                                logging.info(f'{stock} not exist')
                                 break 
                             elif soup.find(id="HyperLink_DownloadCSV") != None:
                                 if stock == "excd":
@@ -173,3 +178,4 @@ if __name__ == '__main__':
     logging.info(f'Crawler Finish')
     shutil.make_archive(f"archived/{today}", 'zip', today)
     logging.info(f'{today} has archived')
+    shutil.move(f"{today}", "data")

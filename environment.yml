@@ -1,0 +1,15 @@
+name: stock
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - opencv
+  - pandas
+  - requests
+  - aiohttp
+  - ca-certificates
+  - openssl
+  - onnxruntime
+  - certifi
+  - beautifulsoup4
+  - sqlalchemy
